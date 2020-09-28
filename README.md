@@ -1,5 +1,5 @@
-# ja-portfolio
-repository of programs ran in SAS and SQL with top to bottom setup of initial database, to regression analysis, to mixed model design
+# ja-mutlti-level models
+repository of programs ran in SAS for multi-level (mixed) model analysis with repeated measures. 
 
 
--- these programs are useful for repeated measures studies, 2x2 design.
+-- these programs are useful for repeated measures studies with variables at multiple time points, or 2x2 design clinical trial.
