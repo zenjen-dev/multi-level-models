@@ -1,5 +1,5 @@
 PROC IMPORT OUT= WORK.schizchina 
-  /*change file name here */ DATAFILE= "C:\Users\jenarriaza\SAS Files\Data\sulforaphane matrics  reasonips diff r1.sav"
+  /*change file name here */ DATAFILE= "/home/u41020973/sasuser.v94/data/sulforaphane matrics verlearn diff  r1 (1).sav"
             DBMS=SPSS REPLACE;
 
 
@@ -10,21 +10,21 @@ run;
 
 data multidata ;
   set schizchina;
-  keep SubNo2 groupcd2 YearsILLmonths SEXCODE MATRICSREASONPSW12W2DIFF MATRICSREASONPSW24W2DIFF W2MCCBReasoningandProblem;  
+  keep SubNo2 groupcd2 YearsILLmonths SEXCODE MATRICSVERLEARNW12W2DIFF MATRICSVERLEARNW24W2DIFF AGE;  
   run;
 
-proc print data=multidata (obs=150); 
+proc print data=multidata (obs=133); 
 run;
 *univariate set-up for mixed model;
 data unidata;
   set multidata;
-  array A(2)MATRICSREASONPSW12W2DIFF--MATRICSREASONPSW24W2DIFF;
+  array A(2)MATRICSVERLEARNW12W2DIFF--MATRICSVERLEARNW24W2DIFF;
   subject +1;
   do time=1 to 2;
-        reasonpsdiff=A(time);
+        verlearndiff=A(time);
 	output;
   end; 
-drop  MATRICSREASONPSW12W2DIFF--MATRICSREASONPSW24W2DIFF; 
+drop  MATRICSVERLEARNW12W2DIFF--MATRICSVERLEARNW24W2DIFF; 
 run;
 
 data unidata;
@@ -32,12 +32,12 @@ data unidata;
   
 run;
 
-****** Model1 -- Unstructured matrics reasoningps total  diff with bas cov,  **********;
-proc mixed data=unidata method=ml;
-  class  SubNo2 groupcd2 time;
-  model reasonpsdiff = W2MCCBReasoningandProblem  groupcd2 time  time*groupcd2/solution;
+****** Model1 -- Unstructured matrics verlearn total  diff with age cov,  **********;
+proc mixed data=unidata method=ml covtest;
+  class  SubNo2 groupcd time;
+  model verlearndiff = AGE  groupcd time  time*groupcd/solution;
   repeated time /subject=SubNo2 type=un r rcorr;
-  lsmeans time*groupcd2/diffs;
+  lsmeans time*groupcd/diffs;
   ods output diffs=groupcdiffs lsmeans=groupcdlsmeans;
-  title 'repeated measure   matrics  reasoningps diff  with baseline cov '; 
+  title 'repeated measures  matrics  verlearn diff  with AGE cov '; 
 run;
